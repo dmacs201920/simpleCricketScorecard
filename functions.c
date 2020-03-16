@@ -8,14 +8,8 @@ void Enter(FILE*f1,FILE*f2)
     int r,chk;
     static int i;
     char s[25];
-    if(i==0)
-    {
-	bowler_name(f2);
-	i=1;
-    }
     display_scorecard(f1);
     printf("Enter the Runs: ");
-    //  printf("Enter 7 for extras\n      8 for wicket: ");
     scanf("%d",&r);
     score(r,f1);
     bowling(r,f2);
@@ -23,7 +17,7 @@ void Enter(FILE*f1,FILE*f2)
 ///////////////////////////////////////////////////
 int isover(int balls)
 {
-    static int i,max;
+    static int i,max,x=4;
     static int overs;
     if(i==0)
     {
@@ -43,7 +37,16 @@ int isover(int balls)
 	    return 0;
     }
     else 
+    {
+	if(x==0)
+	{
+	    overs=0;
+	    x=4;
+	    return 0;
+	}
+	x--;
 	return 2;
+    }
 }
 /////////////////////////////////////////////////// 
 void display_scorecard(FILE*f1)
@@ -53,16 +56,17 @@ void display_scorecard(FILE*f1)
     int i,b;
     int score=0;
     rewind(f1);
-    //printf("PLAYER RUNS BALLS FOURS SIXES\n");
+    printf("     PLAYER    RUNS    BALLS     FOURS      SIXES     STATUS\n");
     while(!feof(f1))
 	while(fread(&p,sizeof(batsman),1,f1)==1)
 	{ 
-	    printf(" %s %d %d %d %d \n",p.name,p.score,p.balls,p.fours,p.sixes);
+	    printf(" %10s   %4d     %4d     %5d     %5d     %5c\n",p.name,p.score,p.balls,p.fours,p.sixes,p.flag);
 	    score+=p.score;
 	}
     i=ex_score(0);
     score+=i;
-    printf("score: %d ",score);
+    b=wicket(0);
+    printf("score: %d-%d",score,b);
     rewind(f1);
 }
 /////////////////////////////////////////////////////
@@ -70,7 +74,7 @@ void display_scorecard(FILE*f1)
 void score(int runs,FILE*f1)
 {
     batsman p,temp1,temp2,temp3;
-    static int i;
+    static int y;
     static int j=1;
     static int balls;
     static long int b;
@@ -78,8 +82,9 @@ void score(int runs,FILE*f1)
     char s[20];
     int t=0,r;
     char ex;
+    int arty;
 
-    if(isover(balls)!=2)
+    if(isover(balls)!=2&&wickets!=10)
     {
 	fseek(f1,b,0);
 	fread(&p,sizeof(batsman),1,f1);
@@ -97,14 +102,14 @@ void score(int runs,FILE*f1)
 	    }
 	    else
 	    {
-		if(strcmp(p.name,team1[i].name)==0)
+		if(strcmp(p.name,team1[y].name)==0)
 		{
-		    fseek(f1,(j-i)*(sizeof(batsman)),1);
+		    fseek(f1,(j-y)*(sizeof(batsman)),1);
 		    b=ftell(f1);
 		}
 		else
 		{
-		    fseek(f1,((j-i)+1)*(-sizeof(batsman)),1);
+		    fseek(f1,((j-y)+1)*(-sizeof(batsman)),1);
 		    b=ftell(f1);
 		}
 		balls=0;
@@ -120,14 +125,14 @@ void score(int runs,FILE*f1)
 	    fwrite(&p,sizeof(batsman),1,f1);
 	    if(!isover(balls))
 	    {
-		if(strcmp(team1[i].name,p.name)==0)
+		if(strcmp(team1[y].name,p.name)==0)
 		{
-		    fseek(f1,(((j-i)-1)*sizeof(batsman)),1);
+		    fseek(f1,(((j-y)-1)*sizeof(batsman)),1);
 		    b=ftell(f1);
 		}
 		else
 		{
-		    fseek(f1,(((j-i)+1)*(-sizeof(batsman))),1);
+		    fseek(f1,(((j-y)+1)*(-sizeof(batsman))),1);
 		    b=ftell(f1);
 		}
 	    }
@@ -154,14 +159,14 @@ void score(int runs,FILE*f1)
 	    }
 	    else
 	    {
-		if(strcmp(team1[i].name,p.name)==0)
+		if(strcmp(team1[y].name,p.name)==0)
 		{
-		    fseek(f1,(((j-i)-1)*sizeof(batsman)),1);
+		    fseek(f1,(((j-y)-1)*sizeof(batsman)),1);
 		    b=ftell(f1);
 		}
 		else
 		{
-		    fseek(f1,(((j-i)+1)*(-sizeof(batsman))),1);
+		    fseek(f1,(((j-y)+1)*(-sizeof(batsman))),1);
 		    b=ftell(f1);
 		}
 		balls=0;
@@ -177,14 +182,14 @@ void score(int runs,FILE*f1)
 	    fwrite(&p,(sizeof(batsman)),1,f1);
 	    if(!isover(balls))
 	    {
-		if(strcmp(team1[i].name,p.name)==0)
+		if(strcmp(team1[y].name,p.name)==0)
 		{
-		    fseek(f1,(((j-i)-1)*sizeof(batsman)),1);
+		    fseek(f1,(((j-y)-1)*sizeof(batsman)),1);
 		    b=ftell(f1);
 		}
 		else
 		{
-		    fseek(f1,(((j-i)+1)*(-sizeof(batsman))),1);
+		    fseek(f1,(((j-y)+1)*(-sizeof(batsman))),1);
 		    b=ftell(f1);
 		}
 	    }
@@ -214,14 +219,14 @@ void score(int runs,FILE*f1)
 	    }
 	    else
 	    {
-		if(strcmp(team1[i].name,p.name)==0)
+		if(strcmp(team1[y].name,p.name)==0)
 		{
-		    fseek(f1,(((j-i)-1)*sizeof(batsman)),1);
+		    fseek(f1,(((j-y)-1)*sizeof(batsman)),1);
 		    b=ftell(f1);
 		}
 		else
 		{
-		    fseek(f1,(((j-i)+1)*(-sizeof(batsman))),1);
+		    fseek(f1,(((j-y)+1)*(-sizeof(batsman))),1);
 		    b=ftell(f1);
 		}
 		balls=0;
@@ -234,7 +239,6 @@ void score(int runs,FILE*f1)
 	    p.balls+=1;
 	    p.sixes+=1;
 	    balls+=1;
-	    printf("%s",team1[t].name);
 	    fseek(f1,-(sizeof(batsman)),1);
 	    fwrite(&p,sizeof(batsman),1,f1);
 	    if(!isover(balls))
@@ -244,14 +248,14 @@ void score(int runs,FILE*f1)
 	    }
 	    else
 	    {
-		if(strcmp(team1[i].name,p.name)==0)
+		if(strcmp(team1[y].name,p.name)==0)
 		{
-		    fseek(f1,(((j-i)-1)*sizeof(batsman)),1);
+		    fseek(f1,(((j-y)-1)*sizeof(batsman)),1);
 		    b=ftell(f1);
 		}
 		else
 		{
-		    fseek(f1,(((j-i)+1)*(-sizeof(batsman))),1);
+		    fseek(f1,(((j-y)+1)*(-sizeof(batsman))),1);
 		    b=ftell(f1);
 		}
 		balls=0;
@@ -284,14 +288,14 @@ void score(int runs,FILE*f1)
 			}
 			else
 			{
-			    if(strcmp(p.name,team1[i].name)==0)
+			    if(strcmp(p.name,team1[y].name)==0)
 			    {
-				fseek(f1,(j-i)*(sizeof(batsman)),1);
+				fseek(f1,(j-y)*(sizeof(batsman)),1);
 				b=ftell(f1);
 			    }
 			    else
 			    {
-				fseek(f1,((j-i)+1)*(-sizeof(batsman)),1);
+				fseek(f1,((j-y)+1)*(-sizeof(batsman)),1);
 				b=ftell(f1);
 			    }
 			    balls=0;
@@ -301,21 +305,21 @@ void score(int runs,FILE*f1)
 		    case 1:
 			if(ex!='n')
 			{
-			balls+=1;
-			p.balls+=1;
+			    balls+=1;
+			    p.balls+=1;
 			}
 			fseek(f1,-(sizeof(batsman)),1);
 			fwrite(&p,sizeof(batsman),1,f1);
 			if(!isover(balls))
 			{
-			    if(strcmp(team1[i].name,p.name)==0)
+			    if(strcmp(team1[y].name,p.name)==0)
 			    {
-				fseek(f1,(((j-i)-1)*sizeof(batsman)),1);
+				fseek(f1,(((j-y)-1)*sizeof(batsman)),1);
 				b=ftell(f1);
 			    }
 			    else
 			    {
-				fseek(f1,(((j-i)+1)*(-sizeof(batsman))),1);
+				fseek(f1,(((j-y)+1)*(-sizeof(batsman))),1);
 				b=ftell(f1);
 			    }
 			}
@@ -330,8 +334,8 @@ void score(int runs,FILE*f1)
 		    case 2:
 			if(ex!='n')
 			{
-			balls+=1;
-			p.balls+=1;
+			    balls+=1;
+			    p.balls+=1;
 			}
 			fseek(f1,-(sizeof(batsman)),1);
 			fwrite(&p,(sizeof(batsman)),1,f1);
@@ -342,14 +346,14 @@ void score(int runs,FILE*f1)
 			}
 			else
 			{
-			    if(strcmp(team1[i].name,p.name)==0)
+			    if(strcmp(team1[y].name,p.name)==0)
 			    {
-				fseek(f1,(((j-i)-1)*sizeof(batsman)),1);
+				fseek(f1,(((j-y)-1)*sizeof(batsman)),1);
 				b=ftell(f1);
 			    }
 			    else
 			    {
-				fseek(f1,(((j-i)+1)*(-sizeof(batsman))),1);
+				fseek(f1,(((j-y)+1)*(-sizeof(batsman))),1);
 				b=ftell(f1);
 			    }
 			    balls=0;
@@ -359,21 +363,21 @@ void score(int runs,FILE*f1)
 		    case 3:
 			if(ex!='n')
 			{
-			balls+=1;
-			p.balls+=1;
+			    balls+=1;
+			    p.balls+=1;
 			}
 			fseek(f1,-(sizeof(batsman)),1);
 			fwrite(&p,(sizeof(batsman)),1,f1);
 			if(!isover(balls))
 			{
-			    if(strcmp(team1[i].name,p.name)==0)
+			    if(strcmp(team1[y].name,p.name)==0)
 			    {
-				fseek(f1,(((j-i)-1)*sizeof(batsman)),1);
+				fseek(f1,(((j-y)-1)*sizeof(batsman)),1);
 				b=ftell(f1);
 			    }
 			    else
 			    {
-				fseek(f1,(((j-i)+1)*(-sizeof(batsman))),1);
+				fseek(f1,(((j-y)+1)*(-sizeof(batsman))),1);
 				b=ftell(f1);
 			    }
 			}
@@ -388,8 +392,8 @@ void score(int runs,FILE*f1)
 		    case 4:
 			if(ex!='n')
 			{
-			balls+=1;
-			p.balls+=1;
+			    balls+=1;
+			    p.balls+=1;
 			}
 			fseek(f1,-(sizeof(batsman)),1);
 			fwrite(&p,(sizeof(batsman)),1,f1);
@@ -400,14 +404,14 @@ void score(int runs,FILE*f1)
 			}
 			else
 			{
-			    if(strcmp(team1[i].name,p.name)==0)
+			    if(strcmp(team1[y].name,p.name)==0)
 			    {
-				fseek(f1,(((j-i)-1)*sizeof(batsman)),1);
+				fseek(f1,(((j-y)-1)*sizeof(batsman)),1);
 				b=ftell(f1);
 			    }
 			    else
 			    {
-				fseek(f1,(((j-i)+1)*(-sizeof(batsman))),1);
+				fseek(f1,(((j-y)+1)*(-sizeof(batsman))),1);
 				b=ftell(f1);
 			    }
 			    balls=0;
@@ -429,14 +433,14 @@ void score(int runs,FILE*f1)
 			}
 			else
 			{
-			    if(strcmp(team1[i].name,p.name)==0)
+			    if(strcmp(team1[y].name,p.name)==0)
 			    {
-				fseek(f1,(((j-i)-1)*sizeof(batsman)),1);
+				fseek(f1,(((j-y)-1)*sizeof(batsman)),1);
 				b=ftell(f1);
 			    }
 			    else
 			    {
-				fseek(f1,(((j-i)+1)*(-sizeof(batsman))),1);
+				fseek(f1,(((j-y)+1)*(-sizeof(batsman))),1);
 				b=ftell(f1);
 			    }
 			    balls=0;
@@ -446,71 +450,69 @@ void score(int runs,FILE*f1)
 	    }
 	}
 	else if(runs==8)
-	{	    wickets+=1;
+	{	 
+	    wickets+=1;
 	    p.balls+=1;
 	    balls+=1;
+	    p.flag='O';
 	    fseek(f1,-(sizeof(batsman)),1);
 	    fwrite(&p,sizeof(batsman),1,f1);
 	    printf("who is the next batsman: ");
-	    printf("%s",p.name);
-	    getchar();
 	    scanf("%s",s);
+	    rewind(f1);
 	    while(t<11)
 	    {
 		if (strcmp(team1[t].name,s)==0)
 		    break;
 		else t++;
 	    }
-	    if(strcmp(team1[i].name,p.name)==0)
+	    if(strcmp(team1[y].name,p.name)==0)
 	    {
 		fseek(f1,((wickets)*sizeof(batsman)),1);
 		fread(&temp1,sizeof(batsman),1,f1);
 		fseek(f1,-sizeof(batsman),1);
 		temp2=temp1;
-		  while(strcmp(temp2.name,team1[t].name)!=0)
-		  fread(&temp2,sizeof(batsman),1,f1);
-		  fseek(f1,-sizeof(batsman),1);
-		  temp3=temp1;
-		  temp1=temp2;
-		  temp2=temp3;
-		i=j;
+		while(strcmp(temp2.name,team1[t].name)!=0)
+		    fread(&temp2,sizeof(batsman),1,f1);
+		fseek(f1,-sizeof(batsman),1);
+		y=j;
 		j=t;
-		printf(" %s\n ",team1[i].name);
-		printf("  %s\n ",team1[j].name);	
+		printf(" %s,%d\n ",team1[y].name,y);
+		printf("  %s,%d\n ",team1[j].name,j);	
 	    }
 	    else
 	    {
-		  fread(&temp1,sizeof(batsman),1,f1);
-		  fseek(f1,-2*sizeof(batsman),1);
-		  temp2=temp1;
-		  while(strcmp(temp2.name,team1[t].name)!=0)
-		  fread(&temp2,sizeof(batsman),1,f1);
-		  fseek(f1,-sizeof(batsman),1);
-		  temp3=temp1;
-		  temp1=temp2;
-		  temp2=temp1;
+		fread(&temp1,sizeof(batsman),1,f1);
+		fseek(f1,-2*sizeof(batsman),1);
+		temp2=temp1;
+		while(strcmp(temp2.name,team1[t].name)!=0)
+		    fread(&temp2,sizeof(batsman),1,f1);
+		fseek(f1,-sizeof(batsman),1);
+		temp3=temp1;
+		temp1=temp2;
+		temp2=temp1;
 		j=t;
+		printf(" %s,%d\n ",team1[y].name,y);
+		printf("  %s,%d\n ",team1[j].name,j);	
 	    }
 	    rewind(f1);
 	    printf("%d",wickets);
 	    printf("who is on strike: ");
-	    getchar();
 	    scanf("%s",s);
-	    getchar();
-	    printf(" %s ",s);
+	    wicket(1);
 	    rewind(f1); 
 	    fread(&temp1,sizeof(batsman),1,f1);
 	    while(strcmp(s,temp1.name)!=0)
 		fread(&temp1,sizeof(batsman),1,f1);
 	    fseek(f1,-sizeof(batsman),1);
 	    b=ftell(f1);
+	    if(isover(0)==2)
+	    {
+		wickets=0;
+	    }
 	}
+	
 
-    }
-    else
-    {
-	display_scorecard(f1);
-	fclose(f1);
     }
 }
 ////////////////////////////////////////
@@ -519,12 +521,12 @@ void display_bowlercard(FILE*f1)
     system("clear");
     bowler p;
     rewind(f1);
-    printf(" BOWLER RUNS OVERS BALLS WICKETS\n");
+    printf(" BOWLER     RUNS     OVERS     BALLS     WICKETS\n");
     while(!feof(f1))
     {
-	while(fread(&p,sizeof(bowler),1,f1)==1)
+	fread(&p,sizeof(bowler),1,f1);
 
-	    printf(" %6s %4d  %5d  %5d  %7d \n",p.name,p.runs,p.overs,p.balls,p.wickets);
+	printf(" %6s %4d  %5d  %5d  %7d \n",p.name,p.runs,p.overs,p.balls,p.wickets);
     }
     rewind(f1);
 }
@@ -533,131 +535,133 @@ void bowling(int runs,FILE*f1)
 {
     bowler temp,p;
     static int balls,a;
-    int r,ary;
+    int r,ary,y,arr;
     char extra;
     if(!a)
     {
-     fseek(f1,-sizeof(bowler),1);
-     fread(&p,sizeof(bowler),1,f1);
+	fseek(f1,-sizeof(bowler),1);
+	fread(&p,sizeof(bowler),1,f1);
 
-    switch(runs)
-    {
-	case 1:
-	    p.runs+=1;
-	    p.balls+=1;
-	    balls+=1;
-	    if(balls==6)
-		p.overs+=1;
-	    fseek(f1,-sizeof(bowler),1);
-	    fwrite(&p,sizeof(bowler),1,f1);
-	    break;
+	switch(runs)
+	{
+	    case 1:
+		p.runs+=1;
+		p.balls+=1;
+		balls+=1;
+		if(balls==6)
+		    p.overs+=1;
+		fseek(f1,-sizeof(bowler),1);
+		fwrite(&p,sizeof(bowler),1,f1);
+		break;
 
-	case 2:
-	    p.runs+=2;
-	    p.balls+=1;
-	    balls+=1;
-	    if(balls==6)
-		p.overs+=1;
-	    fseek(f1,-sizeof(bowler),1);
-	    fwrite(&p,sizeof(bowler),1,f1);
-	    break;
+	    case 2:
+		p.runs+=2;
+		p.balls+=1;
+		balls+=1;
+		if(balls==6)
+		    p.overs+=1;
+		fseek(f1,-sizeof(bowler),1);
+		fwrite(&p,sizeof(bowler),1,f1);
+		break;
 
-	case 3:
-	    p.runs+=3;
-	    p.balls+=1;
-	    balls+=1;
-	    if(balls==6)
-		p.overs+=1;
-	    fseek(f1,-sizeof(bowler),1);
-	    fwrite(&p,sizeof(bowler),1,f1);
-	    break;
+	    case 3:
+		p.runs+=3;
+		p.balls+=1;
+		balls+=1;
+		if(balls==6)
+		    p.overs+=1;
+		fseek(f1,-sizeof(bowler),1);
+		fwrite(&p,sizeof(bowler),1,f1);
+		break;
 
-	case 4:
-	    p.runs+=4;
-	    p.balls+=1;
-	    balls+=1;
-	    if(balls==6)
-		p.overs+=1;
-	    fseek(f1,-sizeof(bowler),1);
-	    fwrite(&p,sizeof(bowler),1,f1);
-	    break;
+	    case 4:
+		p.runs+=4;
+		p.balls+=1;
+		balls+=1;
+		if(balls==6)
+		    p.overs+=1;
+		fseek(f1,-sizeof(bowler),1);
+		fwrite(&p,sizeof(bowler),1,f1);
+		break;
 
-	case 6:
-	    p.runs+=6;
-	    p.balls+=1;
-	    balls+=1;
-	    if(balls==6)
-		p.overs+=1;
-	    fseek(f1,-sizeof(bowler),1);
-	    fwrite(&p,sizeof(bowler),1,f1);
-	    break;
+	    case 6:
+		p.runs+=6;
+		p.balls+=1;
+		balls+=1;
+		if(balls==6)
+		    p.overs+=1;
+		fseek(f1,-sizeof(bowler),1);
+		fwrite(&p,sizeof(bowler),1,f1);
+		break;
 
-	case 7:
-	    printf("Enter the type of Extras: ");
-	    getchar();
-	    scanf("%c",&extra);
-	    switch(extra)
-	    {
-		case'w':
-		    p.extras.wide+=1;
-		    p.runs+=1;
-		    fseek(f1,-sizeof(bowler),1);
-		    fwrite(&p,sizeof(bowler),1,f1);
-		    ary=ex_score(1);
-		    break;
-		case'n':
-		    p.extras.nb+=1;
-		    printf("\n!!!!!!!!!Runs:");
-		    scanf("%d",&r);
-		    p.runs+=(r+1);
-		    fseek(f1,-sizeof(bowler),1);
-		    fwrite(&p,sizeof(bowler),1,f1);
-		    ary=ex_score(r+1);
-		    break;
-		case'b':
-		    p.balls+=1;
-		    printf("\n!!!!!!!!!!Runs:");
-		    scanf("%d",&r);
-		    p.runs+=r;
-		    balls+=1;
-		    fseek(f1,-sizeof(bowler),1);
-		    fwrite(&p,sizeof(bowler),1,f1);
-		    ary=ex_score(r);
-		    break;
-		case'l':
-		    p.balls+=1;
-		    printf("\n!!!!!!!!!!Runs:");
-		    scanf("%d",&r);
-		    p.runs+=r;
-		    balls+=1;
-		    fseek(f1,-sizeof(bowler),1);
-		    fwrite(&p,sizeof(bowler),1,f1);
-		    ary=ex_score(r);
-		    break;
-	    }
+	    case 7:
+		printf("ENTER THE SAME DATA........\n");
+		printf("Enter the type of Extras: ");
+		getchar();
+		scanf("%c",&extra);
+		switch(extra)
+		{
+		    case'w':
+			p.extras.wide+=1;
+			p.runs+=1;
+			fseek(f1,-sizeof(bowler),1);
+			fwrite(&p,sizeof(bowler),1,f1);
+			ary=ex_score(1);
+			break;
+		    case'n':
+			p.extras.nb+=1;
+			printf("\n!!!!!!!!!Runs:");
+			scanf("%d",&r);
+			p.runs+=(r+1);
+			fseek(f1,-sizeof(bowler),1);
+			fwrite(&p,sizeof(bowler),1,f1);
+			ary=ex_score(r+1);
+			break;
+		    case'b':
+			p.balls+=1;
+			printf("\n!!!!!!!!!!Runs:");
+			scanf("%d",&r);
+			p.runs+=r;
+			balls+=1;
+			fseek(f1,-sizeof(bowler),1);
+			fwrite(&p,sizeof(bowler),1,f1);
+			ary=ex_score(r);
+			break;
+		    case'l':
+			p.balls+=1;
+			printf("\n!!!!!!!!!!Runs:");
+			scanf("%d",&r);
+			p.runs+=r;
+			balls+=1;
+			fseek(f1,-sizeof(bowler),1);
+			fwrite(&p,sizeof(bowler),1,f1);
+			ary=ex_score(r);
+			break;
+		}
 
-	    break;
-	case 8:
-	    p.wickets+=1;
-	    p.balls+=1;
-	    balls+=1;
-	    fseek(f1,-sizeof(bowler),1);
-	    fwrite(&p,sizeof(bowler),1,f1);
-	    break;
-    }
-    if((balls==6)&&(isover(0)!=2))
-    {
-	display_bowlercard(f1);
-	bowler_name(f1);
-	balls=0;
-    }
-    if(isover(0)==2)
-	a=1;
-    }
-    else
-    {
-	display_bowlercard(f1);
-	fclose(f1);
+		break;
+	    case 8:
+		p.wickets+=1;
+		p.balls+=1;
+		balls+=1;
+		fseek(f1,-sizeof(bowler),1);
+		fwrite(&p,sizeof(bowler),1,f1);
+		break;
+
+	}
+	if((balls==6)&&(isover(0)!=2))
+	{
+	    display_bowlercard(f1);
+	    printf("balls=%d\n",balls);
+	    bowler_name(f1);
+	    balls=0;
+	}
+	if(isover(0)==2)
+	{
+	    display_bowlercard(f1);
+	    balls=0;
+	    a=0;
+	}
     }
 }
 /////////////////////////////////////////////////////////
@@ -674,13 +678,13 @@ void bowler_name(FILE*f1)
 	if(strcmp(p.name,temp.name)==0)
 	{
 	    chk=1;
-	    printf("..............");
+	    printf("..............\n");
 	    break;
 	}
     }
     if(chk!=1)
     {
-	printf("............++.....");
+	printf("............++.....\n");
 	fseek(f1,0,2);
 	temp.runs=0;
 	temp.balls=0;
@@ -699,6 +703,22 @@ void bowler_name(FILE*f1)
 int ex_score(int extra)
 {
     static int score;
+    int s;
     score+=extra;
+    s=score;
+    if(isover(0)==2)
+    {
+	score==0;
+	return s;
+    }
     return score;
 }
+/************************************************************/
+int wicket(int x)
+{
+    static int wickets;
+    int w;
+    wickets+=x;
+    return wickets;
+}
+

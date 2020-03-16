@@ -4,6 +4,7 @@ typedef struct batsman{
     int balls;
     int fours;
     int sixes;
+    char flag;
 }batsman;
 
 batsman team1[11],team2[11];
@@ -30,3 +31,4 @@ void bowling(int ,FILE*);
 void display_bowlercard(FILE*);
 void bowler_name(FILE*);
 int ex_score(int );
+int wicket(int );
