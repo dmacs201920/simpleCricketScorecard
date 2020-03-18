@@ -6,6 +6,7 @@ typedef struct batsman{
     int sixes;
     char flag;
 }batsman;
+int max;
 
 batsman team1[11],team2[11];
 

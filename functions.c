@@ -2,8 +2,8 @@
 #include"header.h"
 #include<string.h>
 #include<stdlib.h>
-
-void Enter(FILE*f1,FILE*f2)
+int overs1=0;
+void Enter(FILE*f1,FILE*f2)		//FUNCTION FOR ENTERING THE RUNS
 {
     int r,chk;
     static int i;
@@ -15,9 +15,9 @@ void Enter(FILE*f1,FILE*f2)
     bowling(r,f2);
 }
 ///////////////////////////////////////////////////
-int isover(int balls)
+int isover(int balls)			//FUNCTION TO COUNT THE NUMBER OF OVERS  
 {
-    static int i,max,x=4;
+    static int i,x=4;
     static int overs;
     if(i==0)
     {
@@ -31,6 +31,7 @@ int isover(int balls)
 	if(balls==6)
 	{
 	    overs+=1;
+	    overs1=overs;
 	    return 1;
 	}
 	else
@@ -42,14 +43,14 @@ int isover(int balls)
 	{
 	    overs=0;
 	    x=4;
-	    return 0;
+	    return 3;
 	}
 	x--;
 	return 2;
     }
 }
 /////////////////////////////////////////////////// 
-void display_scorecard(FILE*f1)
+void display_scorecard(FILE*f1)			//FUNCTION TO DISPLAY THE SCORECARD OF THE BATTING TEAM
 {
     system("clear");
     batsman p;
@@ -71,10 +72,10 @@ void display_scorecard(FILE*f1)
 }
 /////////////////////////////////////////////////////
 
-void score(int runs,FILE*f1)
+void score(int runs,FILE*f1)			// FUNCTION : TO UPDATE THE SCORE OF A BATSMEN BASED ON INPUT OF THE USER
 {
     batsman p,temp1,temp2,temp3;
-    static int y;
+    static int y,i;
     static int j=1;
     static int balls;
     static long int b;
@@ -89,7 +90,7 @@ void score(int runs,FILE*f1)
 	fseek(f1,b,0);
 	fread(&p,sizeof(batsman),1,f1);
 	printf(" %s \n",p.name);
-	if(runs==0)
+	if(runs==0)				// RUNS=0
 	{
 	    p.balls+=1;
 	    balls+=1;
@@ -116,7 +117,7 @@ void score(int runs,FILE*f1)
 	    }
 	}
 
-	else if(runs==1)
+	else if(runs==1)			// RUNS=1
 	{
 	    p.score+=1;
 	    p.balls+=1;
@@ -145,7 +146,7 @@ void score(int runs,FILE*f1)
 
 	}
 
-	else if(runs==2)
+	else if(runs==2)			//RUNS=2
 	{
 	    p.score+=2;
 	    p.balls+=1;
@@ -173,7 +174,7 @@ void score(int runs,FILE*f1)
 	    }
 	}
 
-	else if(runs==3)
+	else if(runs==3)		// RUNS=3
 	{
 	    p.score+=3;
 	    p.balls+=1;
@@ -204,7 +205,7 @@ void score(int runs,FILE*f1)
 
 
 
-	else if(runs==4)
+	else if(runs==4)		
 	{
 	    p.score+=4;
 	    p.balls+=1;
@@ -262,7 +263,7 @@ void score(int runs,FILE*f1)
 	    }
 	}
 
-	else if(runs==7)
+	else if(runs==7)				// UPDATES IF IT IS EXTRA
 	{
 	    printf("Enter the type of Extras: ");
 	    getchar();
@@ -449,7 +450,7 @@ void score(int runs,FILE*f1)
 		}
 	    }
 	}
-	else if(runs==8)
+	else if(runs==8)		// UPDATES WHEN IT IS A WICKET
 	{	 
 	    wickets+=1;
 	    p.balls+=1;
@@ -496,7 +497,6 @@ void score(int runs,FILE*f1)
 		printf("  %s,%d\n ",team1[j].name,j);	
 	    }
 	    rewind(f1);
-	    printf("%d",wickets);
 	    printf("who is on strike: ");
 	    scanf("%s",s);
 	    wicket(1);
@@ -506,32 +506,35 @@ void score(int runs,FILE*f1)
 		fread(&temp1,sizeof(batsman),1,f1);
 	    fseek(f1,-sizeof(batsman),1);
 	    b=ftell(f1);
-	    if(isover(0)==2)
-	    {
-		wickets=0;
-	    }
+	    
+	}
+	if(overs1==max&&i==0)
+	{
+	    y=0;
+	    j=1;
+	    i=1;
 	}
 	
 
     }
 }
 ////////////////////////////////////////
-void display_bowlercard(FILE*f1)
+void display_bowlercard(FILE*f1)		// FUNCTIO FOR DISPLAYING BOWLER SCORECARD
 {
     system("clear");
     bowler p;
     rewind(f1);
-    printf(" BOWLER     RUNS     OVERS     BALLS     WICKETS\n");
+    printf("    BOWLER     RUNS     OVERS     BALLS     WICKETS\n");
     while(!feof(f1))
     {
-	fread(&p,sizeof(bowler),1,f1);
+	while(fread(&p,sizeof(bowler),1,f1)==1)
 
-	printf(" %6s %4d  %5d  %5d  %7d \n",p.name,p.runs,p.overs,p.balls,p.wickets);
+	printf("%10s     %4d     %5d     %5d     %7d \n",p.name,p.runs,p.overs,p.balls,p.wickets);
     }
     rewind(f1);
 }
 ///////////////////////////////////////////
-void bowling(int runs,FILE*f1)
+void bowling(int runs,FILE*f1)			// FUNCTION TO UPDATE THE BOWLER SCORECARD 
 {
     bowler temp,p;
     static int balls,a;
@@ -665,7 +668,7 @@ void bowling(int runs,FILE*f1)
     }
 }
 /////////////////////////////////////////////////////////
-void bowler_name(FILE*f1)
+void bowler_name(FILE*f1)			// FUNCTION FOR ENTERING THE BOWLER NAME AT THE BEGINNING OF THENEW OVER
 { 
     bowler p,temp;
     static int chk;
@@ -700,7 +703,7 @@ void bowler_name(FILE*f1)
 
 }
 ///////////////////////////////////////////////////////////////
-int ex_score(int extra)
+int ex_score(int extra)					// FUNCTION :TO COUNT THE NUMBER OF EXTRAS AND SAVE THE COUNT OF EXTRAS
 {
     static int score;
     int s;
@@ -714,11 +717,16 @@ int ex_score(int extra)
     return score;
 }
 /************************************************************/
-int wicket(int x)
+int wicket(int x)					// FUNCTION: TO COUNT THE NUMBER OF WICKETS
 {
-    static int wickets;
-    int w;
+    static int wickets,i;
     wickets+=x;
+    if(overs1==max&&i==0)
+    {
+	wickets=0;
+	i=1;
+    }
+
     return wickets;
 }
 

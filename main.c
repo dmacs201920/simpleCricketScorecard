@@ -19,7 +19,6 @@ void main()
 	    f2=fopen("1st_innings_bowler.txt","rb+");
 	    if(f1==NULL)
 	    {
-		printf("EeEEEE");
 		f1=fopen("1st_innings_batsmen.txt","wb+");
 		if(f1==NULL)
 		{
@@ -29,7 +28,6 @@ void main()
 	    }
 	    if(f2==NULL)
 	    {
-		printf("1bbbbbb  ");
 		f2=fopen("1st_innings_bowler.txt","wb+");
 		if(f2==NULL)
 		{
@@ -45,7 +43,6 @@ void main()
 	    f2=fopen("2nd_innings_bowler.txt","rb+");
 	    if(f1==NULL)
 	    {
-		printf("2EeEEEE");
 		f1=fopen("2nd_innings_batsman.txt","wb+");
 		if(f1==NULL)
 		{
@@ -55,7 +52,6 @@ void main()
 	    }
 	    if(f2==NULL)
 	    {
-		printf("2bbbbbb...");
 		f2=fopen("2nd_innings_bowler.txt","wb+");
 		if(f2==NULL)
 		{
@@ -78,18 +74,18 @@ void main()
 	    rewind(f1);
 	    if(jam==0)
 	    {
-	    printf("ENTER 7 FOR EXTRAS && 8 FOR WICKETS");
-	    printf("ENTER N FOR NOBALL\n W FOR WIDES \n b FOR BYES\n L FOR LEG BYES\n");
-	    jam=1;
+		printf("\nENTER 7 FOR EXTRAS && 8 FOR WICKETS");
+		printf("ENTER N FOR NOBALL\n W FOR WIDES \n b FOR BYES\n L FOR LEG BYES\n");
+		jam=1;
 	    }
 	}      
 	d=isover(balls);
 	i=0;
-       if(temp==0)
-        {
-        	bowler_name(f2);
-	       temp=1;
-        }
+	if(temp==0)
+	{
+	    bowler_name(f2);
+	    temp=1;
+	}
 
 	while(isover(0)!=2)
 	{
@@ -102,16 +98,5 @@ void main()
 	temp=0;
 	inn++;
     }
-   /* f1=fopen("1st_innings_batsmen.txt","rb+");
-    f2=fopen("1st_innings_bowlers.txt","rb+");
-    display_scorecard(f1);
-    display_bowlercard(f2);
-    fclose(f1);
-    fclose(f2);
-   /xx* f3=fopen("1st_innings_batsmen.txt","rb+");
-    f4=fopen("1st_innings_bowlers.txt","rb+");
-    display_scorecard(f3);
-    //display_bowlercard(f4);
-    fclose(f3);
-    fclose(f4);*/
+
 }
