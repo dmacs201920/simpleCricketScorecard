@@ -31,7 +31,9 @@ Functions.c:
 Header.h:
 		Header File
 
-SAMPLE INPUT & OUTPUT:
+  ______________________
+ |SAMPLE INPUT & OUTPUT:|
+ |______________________|
 ./score
   innings (1/2): 1
   Enter the players list
@@ -145,7 +147,7 @@ SAMPLE INPUT & OUTPUT:
    
   innings(1/2): 2
 
-	continues in the same way till the end of second innings
+	continues in the same way (as the first innings) till the end of second innings
 
    INNINGS OVER.	
 

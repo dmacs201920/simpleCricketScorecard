@@ -705,14 +705,14 @@ void bowler_name(FILE*f1)			// FUNCTION FOR ENTERING THE BOWLER NAME AT THE BEGI
 ///////////////////////////////////////////////////////////////
 int ex_score(int extra)					// FUNCTION :TO COUNT THE NUMBER OF EXTRAS AND SAVE THE COUNT OF EXTRAS
 {
-    static int score;
+    static int score,i;
     int s;
     score+=extra;
     s=score;
-    if(isover(0)==2)
+    if(overs1==max&&i==0)
     {
-	score==0;
-	return s;
+	score=0;
+	i=1;
     }
     return score;
 }

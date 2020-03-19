@@ -94,7 +94,7 @@ void main()
 	fclose(f1);
 	fclose(f2);
 
-	printf("INNINGS OVER ");
+	printf("INNINGS OVER..\n ");
 	temp=0;
 	inn++;
     }
