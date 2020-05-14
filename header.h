@@ -1,3 +1,8 @@
+		/* PURPOSE:    HEADER FILE
+		 * WRITTEN BY: RAMU.V
+	         * REGD.NO:    173230
+		 */	 
+
 typedef struct batsman{
     char name[10];
     int score;
@@ -33,3 +38,4 @@ void display_bowlercard(FILE*);
 void bowler_name(FILE*);
 int ex_score(int );
 int wicket(int );
+void display_score(FILE*,FILE*);

@@ -1,3 +1,8 @@
+		// PURPOSE:    MAIN FUNCTION
+		// WRITTEN BY: RAMU.V
+		// REGD.NO:    173230
+
+
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
@@ -7,13 +12,13 @@ void main()
     int s[11];
     int c,i=0,chk=0,d,balls=0,innings,inn=0,jam=0;
     static int temp;
-    FILE*f1,*f2,*f3,*f4;
+    FILE*f1,*f2;			//programme uses these same file pointers to open the files required for both the innings
     batsman p;
-    while(inn<2)
+    while(inn<2)				// The loop checks whether both the innings are finished or not
     {
 	printf("innings (1/2): ");
 	scanf("%d",&innings);
-	if(innings==1)
+	if(innings==1)			// opens the files for 1st innings
 	{
 	    f1=fopen("1st_innings_batsmen.txt","rb+");
 	    f2=fopen("1st_innings_bowler.txt","rb+");
@@ -37,7 +42,7 @@ void main()
 	    }
 
 	}
-	else
+	else					// opens the files for 2nd innings
 	{
 	    f1=fopen("2nd_innings_batsman.txt","rb+");
 	    f2=fopen("2nd_innings_bowler.txt","rb+");
@@ -61,9 +66,9 @@ void main()
 	    }
 
 	}
-	if(!chk)
+	if(!chk)			// batsmaen input
 	{
-	    printf("Enter the players list");
+	    printf("Enter the players list:");
 	    while(i<11)
 	    {
 		scanf("%s",team1[i].name);
@@ -74,8 +79,8 @@ void main()
 	    rewind(f1);
 	    if(jam==0)
 	    {
-		printf("\nENTER 7 FOR EXTRAS && 8 FOR WICKETS");
-		printf("ENTER N FOR NOBALL\n W FOR WIDES \n b FOR BYES\n L FOR LEG BYES\n");
+		printf("\nENTER 7 FOR EXTRAS && 8 FOR WICKETS\n");
+		printf("ENTER N FOR NOBALL\n      W FOR WIDES \n      b FOR BYES\n      L FOR LEG BYES\n");
 		jam=1;
 	    }
 	}      
@@ -87,16 +92,17 @@ void main()
 	    temp=1;
 	}
 
-	while(isover(0)!=2)
+	while(isover(0)!=2)		// loop to enter the runs
 	{
 	    Enter(f1,f2);
 	}
-	fclose(f1);
+	fclose(f1);			// closes the files after every innings 
 	fclose(f2);
 
 	printf("INNINGS OVER..\n ");
 	temp=0;
 	inn++;
     }
-
+    printf("For seeing the scorecard of this match......\n");
+    printf(" Type cc -o display display.c ENTER\n Then type ./display ENTER\n");
 }

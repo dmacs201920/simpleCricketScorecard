@@ -4,9 +4,9 @@ A novice implementation of simple cricket scorecard
 /***********************************/
 
 
-PROJECT:SIMPLE CRICKET SCORECARD
+PROJECT:    SIMPLE CRICKET SCORECARD
 WRITTEN BY: RAMU.V
-REGD.NO: 173230
+REGD.NO:    173230
 
 The purpose of the project is to make scorecard for a required match.
 

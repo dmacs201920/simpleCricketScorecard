@@ -1,3 +1,9 @@
+		/*PURPOSE:    THIS FILE CONTAINS ALL THE FUNCTIONS REQUIRED IN THE PROGRAMME
+		 *WRITTEN BY: RAMU.V
+		 *REGD.NO:    173230
+		 */
+
+
 #include<stdio.h>
 #include"header.h"
 #include<string.h>
@@ -519,7 +525,7 @@ void score(int runs,FILE*f1)			// FUNCTION : TO UPDATE THE SCORE OF A BATSMEN BA
     }
 }
 ////////////////////////////////////////
-void display_bowlercard(FILE*f1)		// FUNCTIO FOR DISPLAYING BOWLER SCORECARD
+void display_bowlercard(FILE*f1)		// FUNCTION FOR DISPLAYING BOWLER SCORECARD
 {
     system("clear");
     bowler p;
@@ -597,7 +603,7 @@ void bowling(int runs,FILE*f1)			// FUNCTION TO UPDATE THE BOWLER SCORECARD
 		fwrite(&p,sizeof(bowler),1,f1);
 		break;
 
-	    case 7:
+	    case 7:					// EXTRAS
 		printf("ENTER THE SAME DATA........\n");
 		printf("Enter the type of Extras: ");
 		getchar();
@@ -643,7 +649,7 @@ void bowling(int runs,FILE*f1)			// FUNCTION TO UPDATE THE BOWLER SCORECARD
 		}
 
 		break;
-	    case 8:
+	    case 8:				// WICKETS
 		p.wickets+=1;
 		p.balls+=1;
 		balls+=1;
@@ -652,14 +658,14 @@ void bowling(int runs,FILE*f1)			// FUNCTION TO UPDATE THE BOWLER SCORECARD
 		break;
 
 	}
-	if((balls==6)&&(isover(0)!=2))
+	if((balls==6)&&(isover(0)!=2))		// DISPALYS THE BOWLER CARD IF IT IS A OVER
 	{
 	    display_bowlercard(f1);
 	    printf("balls=%d\n",balls);
 	    bowler_name(f1);
 	    balls=0;
 	}
-	if(isover(0)==2)
+	if(isover(0)==2)		 	// TO DISPALY RHE BOWLER CARD AT THE END OF INNINGS
 	{
 	    display_bowlercard(f1);
 	    balls=0;
@@ -705,16 +711,14 @@ void bowler_name(FILE*f1)			// FUNCTION FOR ENTERING THE BOWLER NAME AT THE BEGI
 ///////////////////////////////////////////////////////////////
 int ex_score(int extra)					// FUNCTION :TO COUNT THE NUMBER OF EXTRAS AND SAVE THE COUNT OF EXTRAS
 {
-    static int score,i;
-    int s;
-    score+=extra;
-    s=score;
+    static int score1,i;
+    score1+=extra;
     if(overs1==max&&i==0)
     {
-	score=0;
+	score1=0;
 	i=1;
     }
-    return score;
+   return score1;
 }
 /************************************************************/
 int wicket(int x)					// FUNCTION: TO COUNT THE NUMBER OF WICKETS
